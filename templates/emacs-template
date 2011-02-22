@@ -1,0 +1,96 @@
+(setq inhibit-splash-screen t)
+(put 'narrow-to-region 'disabled nil)
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(current-language-environment "UTF-8")
+ '(indent-tabs-mode nil nil nil "Use spaces only.")
+ '(initial-scratch-message nil)
+ '(nxml-child-indent 2)
+ '(nxml-outline-child-indent 2)
+ '(scala-interpreter "/opt/local/bin/scala")
+ '(sgml-basic-offset 4)
+ '(transient-mark-mode (quote identity)))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(setq c-basic-offset 4)
+(setq line-move-visual 'nil)
+(add-hook 'text-mode-hook
+            '(lambda () (auto-fill-mode 1)))
+(tool-bar-mode 0)
+(autoload 'regex-tool "~/.emacs.d/regex-tool.el" nil t)
+(add-hook 'ruby-mode-hook (lambda ()
+			    (local-set-key 'f1 'ri)
+			    (local-set-key "\M-\C-i" 'ri-ruby-complete-symbol)
+			    (local-set-key 'f4 'ri-ruby-show-args)
+			    ))
+(add-to-list 'load-path "/opt/local/share/scala-2.8/misc/scala-tool-support/emacs")
+(require 'scala-mode-auto)
+(require 'magit)
+
+
+;(load "/opt/local/share/emacs/site-lisp/nxml-mode/rng-auto.el")
+;(setq auto-mode-alist
+;      (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\|vxml\\)\\'" . nxml-mode)
+;	    auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("\\.ddl\\'" . sql-mode)
+	    auto-mode-alist))
+
+(setq vc-handled-backends (nconc '(Git) (delq 'Git vc-handled-backends)))
+(global-set-key (kbd "M-S-SPC") 'dabbrev-expand)
+(load "~/.emacs.d/toCamel.el")
+(global-set-key (kbd "C-C c") 'camelize-constant-at-point)
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+
+(defun scala-format-imports ()
+  (interactive)
+  (let (pt) 
+    (setq pt (point))
+    (replace-regexp "{" "{\n  ")
+    (goto-char pt)
+    (replace-regexp ",[  ]*" ",\n  ")
+    (goto-char pt)
+    (replace-regexp "}" "\n}")))
+(defun fix-fix-enum-int ()
+  (interactive)
+  (let (pt) 
+    (setq pt (point))
+    (replace-regexp "\\(.*\\)	=	
+
+\\(.*\\)" "  val \\2 = Value(\\1)")))
+
+
+;; ruby                                                                         
+;; based on http://www.rubygarden.org/Ruby/page/show/InstallingEmacsExtensions  
+;;                                                                              
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/ruby")
+
+(autoload 'ruby-mode "ruby-mode"
+  "Mode for editing ruby source files")
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
+(autoload 'run-ruby "inf-ruby"
+  "Run an inferior Ruby process")
+(autoload 'inf-ruby-keys "inf-ruby"
+  "Set local key defs for inf-ruby in ruby-mode")
+(add-hook 'ruby-mode-hook
+          '(lambda ()
+             (inf-ruby-keys)))
+;; If you have Emacs 19.2x or older, use rubydb2x                              
+(autoload 'rubydb "rubydb3x" "Ruby debugger" t)
+;; uncomment the next line if you want syntax highlighting                     
+(add-hook 'ruby-mode-hook 'turn-on-font-lock)
