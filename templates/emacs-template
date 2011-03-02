@@ -26,7 +26,10 @@
 (setq line-move-visual 'nil)
 (add-hook 'text-mode-hook
             '(lambda () (auto-fill-mode 1)))
-(tool-bar-mode 0)
+(if (fboundp 'tool-bar-mode)
+    (tool-bar-mode 0)
+    ())
+
 (autoload 'regex-tool "~/.emacs.d/regex-tool.el" nil t)
 (add-to-list 'load-path "/opt/local/share/scala-2.8/misc/scala-tool-support/emacs")
 (require 'scala-mode-auto)
